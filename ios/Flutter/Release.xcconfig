@@ -1,0 +1,8 @@
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+#include "Generated.xcconfig"
+
+// App Store Release Configuration
+ENABLE_BITCODE=NO
+SWIFT_COMPILATION_MODE=wholemodule
+SWIFT_OPTIMIZATION_LEVEL=-O
+VALIDATE_PRODUCT=YES
