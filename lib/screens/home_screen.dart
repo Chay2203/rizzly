@@ -53,13 +53,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _logout() async {
-    await AuthService.logout();
+    await AuthService.signOut();
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const LandingPage(),
-        ),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const LandingPage()));
     }
   }
 
@@ -100,7 +98,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       if (hasPermission) {
         final directory = await getTemporaryDirectory();
-        _recordingPath = '${directory.path}/answer_${DateTime.now().millisecondsSinceEpoch}.m4a';
+        _recordingPath =
+            '${directory.path}/answer_${DateTime.now().millisecondsSinceEpoch}.m4a';
         debugPrint('Recording path: $_recordingPath');
 
         await _recorder.start(
@@ -262,10 +261,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         SizedBox(
           width: 200,
           height: 200,
-          child: Image.asset(
-            'assets/orb.png',
-            fit: BoxFit.contain,
-          ),
+          child: Image.asset('assets/orb.png', fit: BoxFit.contain),
         ),
 
         const SizedBox(height: 40),
@@ -356,10 +352,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           const SizedBox(height: 16),
           Text(
             'Loading questions...',
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              color: Colors.black45,
-            ),
+            style: GoogleFonts.inter(fontSize: 15, color: Colors.black45),
           ),
         ],
       );
@@ -380,10 +373,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           const SizedBox(height: 8),
           Text(
             'No more questions for now',
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              color: Colors.black45,
-            ),
+            style: GoogleFonts.inter(fontSize: 15, color: Colors.black45),
           ),
         ],
       );
@@ -402,10 +392,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Text(
             'Analyzing your response...',
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              color: Colors.black45,
-            ),
+            style: GoogleFonts.inter(fontSize: 15, color: Colors.black45),
           ),
         ],
       );
@@ -429,10 +416,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: 16),
         Text(
           _isRecording ? 'Tap to stop' : 'Tap to record',
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            color: Colors.black38,
-          ),
+          style: GoogleFonts.inter(fontSize: 14, color: Colors.black38),
         ),
       ],
     );
@@ -552,7 +536,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 color: isPass ? Colors.green.shade50 : Colors.orange.shade50,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isPass ? Colors.green.shade200 : Colors.orange.shade200,
+                  color: isPass
+                      ? Colors.green.shade200
+                      : Colors.orange.shade200,
                 ),
               ),
               child: Text(
@@ -561,7 +547,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   letterSpacing: -0.2,
-                  color: isPass ? Colors.green.shade800 : Colors.orange.shade800,
+                  color: isPass
+                      ? Colors.green.shade800
+                      : Colors.orange.shade800,
                   height: 1.5,
                 ),
               ),
@@ -581,7 +569,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: AnimatedBuilder(
         animation: _pulseController,
         builder: (context, child) {
-          final scale = _isRecording ? 1.0 + (_pulseController.value * 0.1) : 1.0;
+          final scale = _isRecording
+              ? 1.0 + (_pulseController.value * 0.1)
+              : 1.0;
           return Transform.scale(
             scale: scale,
             child: Container(
@@ -616,7 +606,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final isPass = _feedback?['verdict'] == 'PASS';
 
     return GestureDetector(
-      onTap: isPass ? _nextQuestion : () => setState(() => _showFeedback = false),
+      onTap: isPass
+          ? _nextQuestion
+          : () => setState(() => _showFeedback = false),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 18),
         decoration: BoxDecoration(
