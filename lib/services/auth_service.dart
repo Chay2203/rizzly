@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +11,9 @@ class AuthService {
   static const String _userIdKey = 'user_id';
   static const String _userEmailKey = 'user_email';
 
-  // Initialize Google Sign-In with server client ID
+  // Initialize Google Sign-In with platform-specific client IDs
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: Platform.isIOS ? ApiConfig.googleIosClientId : null,
     serverClientId: ApiConfig.googleWebClientId,
     scopes: ['email'],
   );
