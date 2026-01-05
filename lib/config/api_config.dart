@@ -1,6 +1,5 @@
 class ApiConfig {
-  static const String baseUrl =
-      'https://unforensically-apographic-thalia.ngrok-free.dev';
+  static const String baseUrl = 'https://talktojesus-backend.onrender.com';
 
   // User Endpoints
   static const String createUser = '/api/user/create';
