@@ -42,6 +42,8 @@ dependencies:
   http_parser: ^4.0.2
   shared_preferences: ^2.3.3
   google_sign_in: ^6.2.1
+  flutter_svg: ^2.0.10+1
+  sensors_plus: ^5.0.1
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'widgets/floating_hearts.dart';
 import 'services/auth_service.dart';
 import 'screens/home_screen.dart';
 
@@ -13,16 +15,16 @@ void main() {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
-  runApp(const ZyphoraApp());
+  runApp(const RizzlyApp());
 }
 
-class ZyphoraApp extends StatelessWidget {
-  const ZyphoraApp({super.key});
+class RizzlyApp extends StatelessWidget {
+  const RizzlyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zyphora',
+      title: 'Rizzly',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
@@ -89,9 +91,7 @@ class _SplashScreenState extends State<SplashScreen> {
           debugPrint('   User ID: $userId');
 
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => HomeScreen(userId: userId),
-            ),
+            MaterialPageRoute(builder: (_) => HomeScreen(userId: userId)),
           );
         } catch (e) {
           // Step 4: API call failed (token invalid/expired) - redirect to login
@@ -117,11 +117,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _goToLanding() {
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => const LandingPage(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const LandingPage()));
   }
 
   @override
@@ -130,7 +128,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Text(
-          'Zyphora',
+          'Rizzly',
           style: GoogleFonts.playfairDisplay(
             fontSize: 48,
             fontWeight: FontWeight.w500,
@@ -172,21 +170,19 @@ class _LandingPageState extends State<LandingPage> {
         debugPrint('🔄 [LandingPage] Navigating to HomeScreen');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(userId: userId),
-          ),
+          MaterialPageRoute(builder: (context) => HomeScreen(userId: userId)),
         );
       }
     } catch (e, stackTrace) {
       debugPrint('❌ [LandingPage] Error signing in: $e');
       debugPrint('   Stack trace: $stackTrace');
-      
+
       if (mounted) {
         String errorMessage = 'Failed to sign in with Google';
         String? detailedError;
-        
+
         final errorString = e.toString();
-        
+
         if (errorString.contains('cancelled')) {
           errorMessage = 'Sign in was cancelled';
         } else if (errorString.contains('network')) {
@@ -200,9 +196,10 @@ class _LandingPageState extends State<LandingPage> {
           errorMessage = 'Authentication failed. Please try again';
         } else if (errorString.contains('10')) {
           errorMessage = 'Configuration Error (Code 10)';
-          detailedError = 'Verify SHA-1 certificate and OAuth client IDs in Google Cloud Console';
+          detailedError =
+              'Verify SHA-1 certificate and OAuth client IDs in Google Cloud Console';
         }
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Column(
@@ -215,10 +212,7 @@ class _LandingPageState extends State<LandingPage> {
                 ),
                 if (detailedError != null) ...[
                   const SizedBox(height: 4),
-                  Text(
-                    detailedError,
-                    style: const TextStyle(fontSize: 12),
-                  ),
+                  Text(detailedError, style: const TextStyle(fontSize: 12)),
                 ],
               ],
             ),
@@ -239,8 +233,11 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SizedBox(
+      body: Stack(
+        children: [
+          const FloatingHeartsBackground(),
+          SafeArea(
+            child: SizedBox(
           width: double.infinity,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -249,7 +246,7 @@ class _LandingPageState extends State<LandingPage> {
               children: [
                 const SizedBox(height: 60),
                 Text(
-                  'Zyphora',
+                  'Rizzly',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 48,
@@ -259,34 +256,20 @@ class _LandingPageState extends State<LandingPage> {
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  'Experience the flow',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 1,
-                    color: Colors.black45,
-                  ),
-                ),
                 const Spacer(),
                 // Google Sign-In Button
                 GestureDetector(
                   onTap: _isLoading ? null : _handleGoogleSignIn,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.black,
                       borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: _isLoading ? Colors.black26 : Colors.black12,
-                        width: 1.5,
-                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.05),
@@ -300,23 +283,16 @@ class _LandingPageState extends State<LandingPage> {
                             width: 24,
                             height: 24,
                             child: CupertinoActivityIndicator(
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           )
                         : Row(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.network(
-                                'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                              SvgPicture.asset(
+                                'assets/google.svg',
                                 height: 24,
                                 width: 24,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(
-                                    Icons.g_mobiledata_rounded,
-                                    size: 24,
-                                    color: Colors.black87,
-                                  );
-                                },
                               ),
                               const SizedBox(width: 12),
                               Text(
@@ -324,8 +300,8 @@ class _LandingPageState extends State<LandingPage> {
                                 style: GoogleFonts.inter(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  letterSpacing: 0,
-                                  color: Colors.black87,
+                                  letterSpacing: -0.5,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],
@@ -333,19 +309,12 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  'Sign in to save your progress',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black38,
-                  ),
-                ),
-                const SizedBox(height: 60),
               ],
             ),
           ),
         ),
+          ),
+        ],
       ),
     );
   }

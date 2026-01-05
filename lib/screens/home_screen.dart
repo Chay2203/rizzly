@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: 24),
         // Title
         Text(
-          'Zyphora',
+          'Rizzly',
           textAlign: TextAlign.center,
           style: GoogleFonts.playfairDisplay(
             fontSize: 48,
@@ -313,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: 16),
         // Title
         Text(
-          'Zyphora',
+          'Rizzly',
           textAlign: TextAlign.center,
           style: GoogleFonts.playfairDisplay(
             fontSize: 36,

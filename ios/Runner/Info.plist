@@ -49,6 +49,8 @@
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Rizzly needs microphone access to record your voice answers</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Rizzly uses motion sensors for visual effects</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
