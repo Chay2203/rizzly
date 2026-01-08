@@ -225,4 +225,26 @@ class AuthService {
       '   - Expected SHA-1: 37:7E:7C:A8:1F:3F:EE:28:41:80:B4:A4:17:36:96:87:83:09:8D:C1',
     );
   }
+
+  /// Sign in with Apple Tester account (for App Store review)
+  static Future<Map<String, dynamic>> signInAsAppleTester() async {
+    debugPrint('🍎 [AuthService] Signing in as Apple Tester...');
+
+    const String testUserId = '00000000-0000-0000-0000-000000000001';
+    const String testEmail = 'apple.tester@talktojesus.app';
+    const String testToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJpYXQiOjE3Njc4NTI0MjAsImV4cCI6MTc3MzkwMDQyMH0.H_BC2498AwUo8Ujn9O6HUiI0YW1ql5HIXSHlhUv_dUc';
+
+    await saveSession(testToken, testUserId, testEmail);
+
+    debugPrint('✅ [AuthService] Apple Tester sign-in complete');
+
+    return {
+      'user': {
+        'id': testUserId,
+        'email': testEmail,
+      },
+      'token': testToken,
+    };
+  }
 }

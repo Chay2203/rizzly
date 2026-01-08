@@ -22,15 +22,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadQuestions() async {
+    debugPrint('📋 [HomeScreen] Loading questions...');
+    debugPrint('   Token set: ${ApiService.token != null}');
     try {
       final data = await ApiService.getUnansweredQuestions();
+      debugPrint('✅ [HomeScreen] Questions response: $data');
       if (mounted) {
         setState(() {
           _questions = data['questions'] ?? [];
         });
+        debugPrint('   Loaded ${_questions.length} questions');
       }
     } catch (e) {
-      // Load silently in background
+      debugPrint('❌ [HomeScreen] Error loading questions: $e');
     }
   }
 

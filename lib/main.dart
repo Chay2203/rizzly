@@ -151,6 +151,44 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   bool _isLoading = false;
+  bool _isAppleTesterLoading = false;
+
+  Future<void> _handleAppleTesterSignIn() async {
+    debugPrint('🍎 [LandingPage] Apple Tester button tapped');
+    setState(() => _isAppleTesterLoading = true);
+
+    try {
+      final result = await AuthService.signInAsAppleTester();
+
+      final user = result['user'];
+      final userId = user['id']?.toString() ?? '';
+
+      debugPrint('✅ [LandingPage] Apple Tester sign-in successful');
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(userId: userId)),
+        );
+      }
+    } catch (e) {
+      debugPrint('❌ [LandingPage] Error with Apple Tester sign-in: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Failed to sign in as Apple Tester'),
+            backgroundColor: Colors.red.shade400,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isAppleTesterLoading = false);
+      }
+    }
+  }
 
   Future<void> _handleGoogleSignIn() async {
     debugPrint('👆 [LandingPage] Google Sign-In button tapped');
@@ -302,6 +340,53 @@ class _LandingPageState extends State<LandingPage> {
                                   fontWeight: FontWeight.w500,
                                   letterSpacing: -0.5,
                                   color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Apple Tester Button
+                GestureDetector(
+                  onTap: _isAppleTesterLoading ? null : _handleAppleTesterSignIn,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 1,
+                      ),
+                    ),
+                    child: _isAppleTesterLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CupertinoActivityIndicator(),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.apple,
+                                size: 24,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Apple Tester',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.5,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],

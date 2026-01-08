@@ -157,10 +157,15 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
 
     try {
       final currentQuestion = _questions[_currentQuestionIndex];
+      debugPrint('📤 [QuestionDetail] Submitting answer for question: ${currentQuestion['id']}');
+
       final response = await ApiService.submitAnswer(
         questionId: currentQuestion['id'],
         audioFile: File(audioPath),
       );
+
+      debugPrint('✅ [QuestionDetail] Answer submitted successfully');
+      debugPrint('   Response: $response');
 
       setState(() {
         _feedback = response;
@@ -172,6 +177,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
         await _playFeedbackAudio(response['feedback_audio']);
       }
     } catch (e) {
+      debugPrint('❌ [QuestionDetail] Failed to submit answer: $e');
       setState(() => _isSubmitting = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -198,24 +204,29 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
   }
 
   void _nextQuestion() {
+    debugPrint('➡️ [QuestionDetail] Moving to next question');
+    debugPrint('   Current index: $_currentQuestionIndex, Total: ${_questions.length}');
+
     setState(() {
       _showFeedback = false;
       _feedback = null;
 
       // Remove the answered question from the list
       if (_questions.isNotEmpty) {
-        _questions.removeAt(_currentQuestionIndex);
+        final removedQuestion = _questions.removeAt(_currentQuestionIndex);
+        debugPrint('   Removed question: ${removedQuestion['id']}');
       }
 
       // Check if there are more questions
       if (_questions.isEmpty) {
-        // All questions done, go back
+        debugPrint('   No more questions, going back to home');
         Navigator.of(context).pop();
       } else {
         // Adjust index if needed (stay at same index since we removed one)
         if (_currentQuestionIndex >= _questions.length) {
           _currentQuestionIndex = _questions.length - 1;
         }
+        debugPrint('   Remaining questions: ${_questions.length}');
       }
     });
   }
