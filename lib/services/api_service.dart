@@ -59,6 +59,53 @@ class ApiService {
     }
   }
 
+  /// Create user with Apple Sign-In token
+  static Future<Map<String, dynamic>> createUserWithApple({
+    required String identityToken,
+    required String authorizationCode,
+    String? email,
+    String? fullName,
+  }) async {
+    final url = '${ApiConfig.baseUrl}${ApiConfig.createUserWithApple}';
+    debugPrint('🍎 [ApiService] Creating user with Apple token');
+    debugPrint('   URL: $url');
+    debugPrint('   Token length: ${identityToken.length}');
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'identityToken': identityToken,
+        'authorizationCode': authorizationCode,
+        'email': email,
+        'fullName': fullName,
+      }),
+    );
+
+    debugPrint('📡 [ApiService] Response status: ${response.statusCode}');
+    debugPrint('   Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['token'] != null) {
+        setToken(data['token']);
+      }
+      debugPrint('✅ [ApiService] Apple user created successfully');
+      return data;
+    } else if (response.statusCode == 400) {
+      debugPrint('❌ [ApiService] Missing Apple token (400)');
+      throw ApiException('Missing Apple token', response.statusCode);
+    } else if (response.statusCode == 401) {
+      debugPrint('❌ [ApiService] Invalid Apple token (401)');
+      throw ApiException('Invalid Apple token', response.statusCode);
+    } else {
+      debugPrint(
+        '❌ [ApiService] Failed to create user (${response.statusCode})',
+      );
+      throw ApiException('Failed to create user', response.statusCode);
+    }
+  }
+
   /// Get current authenticated user
   static Future<Map<String, dynamic>> getCurrentUser() async {
     final url = '${ApiConfig.baseUrl}${ApiConfig.getCurrentUser}';

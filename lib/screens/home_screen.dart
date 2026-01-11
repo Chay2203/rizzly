@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
+import '../main.dart';
 import 'question_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,6 +55,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _handleLogout() async {
+    debugPrint('🚪 [HomeScreen] Logout button tapped');
+    await AuthService.signOut();
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LandingPage()),
+        (route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +73,34 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            // Top bar with logout button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Logout button
+                  GestureDetector(
+                    onTap: _handleLogout,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.logout_rounded,
+                        size: 18,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 36), // Balance the row
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
             // Title
             Text(
               'Rizzly',

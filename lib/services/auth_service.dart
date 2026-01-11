@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'api_service.dart';
 import '../config/api_config.dart';
 
@@ -99,6 +100,101 @@ class AuthService {
         debugPrint('⚠️ [AuthService] Error during sign out: $signOutError');
       }
 
+      rethrow;
+    }
+  }
+
+  /// Sign in with Apple and authenticate with backend (iOS only)
+  static Future<Map<String, dynamic>> signInWithApple() async {
+    debugPrint('🍎 [AuthService] Starting Apple Sign-In...');
+
+    try {
+      // Check if Apple Sign-In is available (iOS 13+)
+      final isAvailable = await SignInWithApple.isAvailable();
+      if (!isAvailable) {
+        throw Exception('Apple Sign-In is not available on this device');
+      }
+
+      // Request Apple Sign-In credentials
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      debugPrint('✅ [AuthService] Apple credentials received');
+      debugPrint('   User ID: ${credential.userIdentifier}');
+      debugPrint('   Email: ${credential.email}');
+
+      final identityToken = credential.identityToken;
+      final authorizationCode = credential.authorizationCode;
+
+      if (identityToken == null) {
+        debugPrint('❌ [AuthService] No identity token from Apple');
+        throw Exception('No identity token received from Apple');
+      }
+
+      // Build full name if provided (only on first sign-in)
+      String? fullName;
+      if (credential.givenName != null || credential.familyName != null) {
+        fullName = [credential.givenName, credential.familyName]
+            .where((n) => n != null && n.isNotEmpty)
+            .join(' ');
+        if (fullName.isEmpty) fullName = null;
+      }
+
+      // Send to backend for verification and user creation
+      final response = await ApiService.createUserWithApple(
+        identityToken: identityToken,
+        authorizationCode: authorizationCode,
+        email: credential.email,
+        fullName: fullName,
+      );
+
+      final user = response['user'];
+      final token = response['token'];
+
+      if (user == null || token == null) {
+        debugPrint('❌ [AuthService] Invalid response from server: $response');
+        throw Exception('Invalid response from server');
+      }
+
+      final userId = user['id']?.toString() ?? '';
+      final userEmail = user['email']?.toString() ?? credential.email ?? '';
+
+      await saveSession(token.toString(), userId, userEmail);
+
+      debugPrint('✅ [AuthService] Apple Sign-In complete');
+
+      return {
+        'user': user,
+        'token': token,
+        'appleUser': {
+          'email': credential.email,
+          'fullName': fullName,
+          'userIdentifier': credential.userIdentifier,
+        },
+      };
+    } on SignInWithAppleAuthorizationException catch (e) {
+      debugPrint('❌ [AuthService] Apple Sign-In Authorization Error: ${e.code}');
+
+      if (e.code == AuthorizationErrorCode.canceled) {
+        throw Exception('Apple Sign-In was cancelled');
+      } else if (e.code == AuthorizationErrorCode.failed) {
+        throw Exception('Apple Sign-In failed. Please try again.');
+      } else if (e.code == AuthorizationErrorCode.invalidResponse) {
+        throw Exception('Invalid response from Apple. Please try again.');
+      } else if (e.code == AuthorizationErrorCode.notHandled) {
+        throw Exception('Apple Sign-In not handled. Please try again.');
+      } else if (e.code == AuthorizationErrorCode.notInteractive) {
+        throw Exception('Apple Sign-In requires user interaction.');
+      } else {
+        throw Exception('Apple Sign-In error: ${e.message}');
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ [AuthService] Error during Apple Sign-In: $e');
+      debugPrint('   StackTrace: $stackTrace');
       rethrow;
     }
   }

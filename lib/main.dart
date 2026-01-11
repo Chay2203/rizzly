@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -151,6 +152,7 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   bool _isLoading = false;
+  bool _isAppleSignInLoading = false;
   bool _isAppleTesterLoading = false;
 
   Future<void> _handleAppleTesterSignIn() async {
@@ -186,6 +188,59 @@ class _LandingPageState extends State<LandingPage> {
     } finally {
       if (mounted) {
         setState(() => _isAppleTesterLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleAppleSignIn() async {
+    debugPrint('🍎 [LandingPage] Apple Sign-In button tapped');
+    setState(() => _isAppleSignInLoading = true);
+
+    try {
+      debugPrint('🔄 [LandingPage] Initiating Apple Sign-In...');
+      final result = await AuthService.signInWithApple();
+
+      final user = result['user'];
+      final userId = user['id']?.toString() ?? '';
+
+      debugPrint('✅ [LandingPage] Apple Sign-in successful');
+      debugPrint('   User ID: $userId');
+
+      if (mounted) {
+        debugPrint('🔄 [LandingPage] Navigating to HomeScreen');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(userId: userId)),
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ [LandingPage] Error with Apple Sign-In: $e');
+      debugPrint('   Stack trace: $stackTrace');
+
+      if (mounted) {
+        String errorMessage = 'Failed to sign in with Apple';
+        final errorString = e.toString();
+
+        if (errorString.contains('cancelled')) {
+          errorMessage = 'Sign in was cancelled';
+        } else if (errorString.contains('not available')) {
+          errorMessage = 'Apple Sign-In is not available on this device';
+        } else if (errorString.contains('network')) {
+          errorMessage = 'Network error. Please check your connection';
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red.shade400,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isAppleSignInLoading = false);
       }
     }
   }
@@ -346,6 +401,55 @@ class _LandingPageState extends State<LandingPage> {
                           ),
                   ),
                 ),
+                // Apple Sign-In Button (iOS only)
+                if (Platform.isIOS) ...[
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: _isAppleSignInLoading ? null : _handleAppleSignIn,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: _isAppleSignInLoading
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CupertinoActivityIndicator(),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.apple,
+                                  size: 24,
+                                  color: Colors.black,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Continue with Apple',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.5,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 16),
                 // Apple Tester Button
                 GestureDetector(
