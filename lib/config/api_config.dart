@@ -1,5 +1,5 @@
 class ApiConfig {
-  static const String baseUrl = 'https://talktojesus-backend.onrender.com';
+  static const String baseUrl = 'https://rizzly.up.railway.app';
 
   // User Endpoints
   static const String createUser = '/api/user/create';
