@@ -29,6 +29,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
   bool _isRecording = false;
   bool _isSubmitting = false;
   bool _showFeedback = false;
+  bool _isLoadingNextQuestion = false;
   Map<String, dynamic>? _feedback;
 
   // Mutable list of questions - removes answered ones
@@ -157,14 +158,16 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
 
     try {
       final currentQuestion = _questions[_currentQuestionIndex];
-      debugPrint('📤 [QuestionDetail] Submitting answer for question: ${currentQuestion['id']}');
+      debugPrint(
+        '[QuestionDetail] Submitting answer for question: ${currentQuestion['id']}',
+      );
 
       final response = await ApiService.submitAnswer(
         questionId: currentQuestion['id'],
         audioFile: File(audioPath),
       );
 
-      debugPrint('✅ [QuestionDetail] Answer submitted successfully');
+      debugPrint('[QuestionDetail] Answer submitted successfully');
       debugPrint('   Response: $response');
 
       setState(() {
@@ -177,7 +180,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
         await _playFeedbackAudio(response['feedback_audio']);
       }
     } catch (e) {
-      debugPrint('❌ [QuestionDetail] Failed to submit answer: $e');
+      debugPrint('[QuestionDetail] Failed to submit answer: $e');
       setState(() => _isSubmitting = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -204,30 +207,41 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
   }
 
   void _nextQuestion() {
-    debugPrint('➡️ [QuestionDetail] Moving to next question');
-    debugPrint('   Current index: $_currentQuestionIndex, Total: ${_questions.length}');
+    debugPrint('[QuestionDetail] Moving to next question');
+    debugPrint(
+      '   Current index: $_currentQuestionIndex, Total: ${_questions.length}',
+    );
 
     setState(() {
       _showFeedback = false;
       _feedback = null;
+      _isLoadingNextQuestion = true;
+    });
 
-      // Remove the answered question from the list
-      if (_questions.isNotEmpty) {
-        final removedQuestion = _questions.removeAt(_currentQuestionIndex);
-        debugPrint('   Removed question: ${removedQuestion['id']}');
-      }
+    // Brief delay to show loading state, then transition
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
 
-      // Check if there are more questions
-      if (_questions.isEmpty) {
-        debugPrint('   No more questions, going back to home');
-        Navigator.of(context).pop();
-      } else {
-        // Adjust index if needed (stay at same index since we removed one)
-        if (_currentQuestionIndex >= _questions.length) {
-          _currentQuestionIndex = _questions.length - 1;
+      setState(() {
+        // Remove the answered question from the list
+        if (_questions.isNotEmpty) {
+          final removedQuestion = _questions.removeAt(_currentQuestionIndex);
+          debugPrint('   Removed question: ${removedQuestion['id']}');
         }
-        debugPrint('   Remaining questions: ${_questions.length}');
-      }
+
+        // Check if there are more questions
+        if (_questions.isEmpty) {
+          debugPrint('   No more questions, going back to home');
+          Navigator.of(context).pop();
+        } else {
+          // Adjust index if needed (stay at same index since we removed one)
+          if (_currentQuestionIndex >= _questions.length) {
+            _currentQuestionIndex = _questions.length - 1;
+          }
+          debugPrint('   Remaining questions: ${_questions.length}');
+          _isLoadingNextQuestion = false;
+        }
+      });
     });
   }
 
@@ -251,89 +265,119 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
         // Header
         _buildHeader(),
 
-        // Question Area
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-          decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (currentQuestion != null) ...[
-                SizedBox(
-                  width: 328,
-                  child: Opacity(
-                    opacity: 0.80,
-                    child: Text(
-                      currentQuestion['text'] ?? 'No question available',
-                      style: GoogleFonts.instrumentSerif(
-                        color: const Color(0xFF121212),
-                        fontSize: 32,
-                        fontWeight: FontWeight.w400,
-                        height: 1.30,
-                        letterSpacing: 0.72,
-                      ),
-                    ),
+        // Scrollable content including question
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Question Area
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 32,
                   ),
-                ),
-                const SizedBox(height: 10),
-                Opacity(
-                  opacity: 0.30,
-                  child: Row(
+                  decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.lightbulb_outline,
-                          size: 16, color: Colors.black),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Think less. Don\'t defend. Just play.',
-                        style: GoogleFonts.dmSans(
-                            color: Colors.black,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            height: 1.30,
-                            letterSpacing: 0.26,
+                      if (_isLoadingNextQuestion)
+                        SizedBox(
+                          width: 328,
+                          child: Opacity(
+                            opacity: 0.80,
+                            child: Text(
+                              'Loading next question...',
+                              style: GoogleFonts.instrumentSerif(
+                                color: const Color(0xFF121212),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w400,
+                                height: 1.30,
+                                letterSpacing: 0.72,
+                              ),
+                            ),
+                          ),
+                        )
+                      else if (currentQuestion != null) ...[
+                        SizedBox(
+                          width: 328,
+                          child: Opacity(
+                            opacity: 0.80,
+                            child: Text(
+                              currentQuestion['text'] ??
+                                  'No question available',
+                              style: GoogleFonts.instrumentSerif(
+                                color: const Color(0xFF121212),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w400,
+                                height: 1.30,
+                                letterSpacing: 0.72,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Opacity(
+                          opacity: 0.30,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.lightbulb_outline,
+                                size: 16,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Think less. Don\'t defend. Just play.',
+                                style: GoogleFonts.dmSans(
+                                  color: Colors.black,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.30,
+                                  letterSpacing: 0.26,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-            ],
-          ),
-        ),
-
-        // Waveform when recording, otherwise spacer
-        Expanded(
-          child: _isRecording
-              ? Center(child: _buildWaveform())
-              : const SizedBox.shrink(),
-        ),
-
-        // Bottom Section with Mic
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 40),
-          child: Column(
-            children: [
-              _buildRecordButton(),
-              const SizedBox(height: 10),
-              Opacity(
-                opacity: 0.30,
-                child: Text(
-                  _isSubmitting
-                      ? 'Analyzing'
-                      : (_isRecording ? 'Tap to stop' : 'Tap to speak'),
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF121212),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                    height: 1.60,
+                    ],
                   ),
                 ),
-              ),
-            ],
+
+                // Waveform when recording
+                if (_isRecording)
+                  SizedBox(height: 200, child: Center(child: _buildWaveform())),
+
+                // Bottom Section with Mic
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Column(
+                    children: [
+                      _buildRecordButton(),
+                      const SizedBox(height: 10),
+                      Opacity(
+                        opacity: 0.30,
+                        child: Text(
+                          _isSubmitting
+                              ? 'Analyzing'
+                              : (_isRecording ? 'Tap to stop' : 'Tap to speak'),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFF121212),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            height: 1.60,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -410,8 +454,9 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
           : AnimatedBuilder(
               animation: _pulseController,
               builder: (context, child) {
-                final scale =
-                    _isRecording ? 1.0 + (_pulseController.value * 0.1) : 1.0;
+                final scale = _isRecording
+                    ? 1.0 + (_pulseController.value * 0.1)
+                    : 1.0;
                 return Transform.scale(
                   scale: scale,
                   child: Container(
@@ -424,7 +469,10 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
                         end: const Alignment(0.69, 0.42),
                         colors: _isRecording
                             ? [const Color(0xFFFF6F91), const Color(0xFFFF4470)]
-                            : [const Color(0xFF006FD1), const Color(0xFF006FD0)],
+                            : [
+                                const Color(0xFF006FD1),
+                                const Color(0xFF006FD0),
+                              ],
                       ),
                       shape: RoundedRectangleBorder(
                         side: const BorderSide(width: 1, color: Colors.white),
@@ -443,8 +491,11 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
                     ),
                     child: Center(
                       child: _isRecording
-                          ? const Icon(Icons.stop_rounded,
-                              color: Colors.white, size: 32)
+                          ? const Icon(
+                              Icons.stop_rounded,
+                              color: Colors.white,
+                              size: 32,
+                            )
                           : SvgPicture.asset(
                               'assets/record.svg',
                               width: 26,
@@ -476,157 +527,192 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
         // Header with title and tags
         _buildFeedbackHeader(),
 
-        // Question Section
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-          decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
-          child: SizedBox(
-            width: 328,
-            child: Opacity(
-              opacity: 0.80,
-              child: Text(
-                currentQuestion?['text'] ?? '',
-                style: GoogleFonts.instrumentSerif(
-                  color: const Color(0xFF121212),
-                  fontSize: 32,
-                  fontWeight: FontWeight.w400,
-                  height: 1.30,
-                  letterSpacing: 0.72,
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        // Feedback Card
+        // Scrollable content including question and feedback
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(25),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(top: 41, left: 20, right: 20, bottom: 20),
-              decoration: ShapeDecoration(
-                color: isPass
-                    ? const Color(0xFF008972).withValues(alpha: 0.05)
-                    : const Color(0xFF006FD1).withValues(alpha: 0.05),
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    width: 2,
-                    color: isPass
-                        ? const Color(0xFF008972).withValues(alpha: 0.2)
-                        : const Color(0xFF006FD1).withValues(alpha: 0.2),
+            child: Column(
+              children: [
+                // Question Section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 32,
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
+                  child: SizedBox(
+                    width: 328,
+                    child: Opacity(
+                      opacity: 0.80,
+                      child: Text(
+                        currentQuestion?['text'] ?? '',
+                        style: GoogleFonts.instrumentSerif(
+                          color: const Color(0xFF121212),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w400,
+                          height: 1.30,
+                          letterSpacing: 0.72,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: isPass ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-                children: [
-                  // Status Bar
-                  _buildStatusBar(statusScore, isPass),
-                  const SizedBox(height: 36),
-                  // Feedback Title
-                  Text(
-                    feedbackTitle,
-                    style: GoogleFonts.instrumentSerif(
-                      color: isPass ? const Color(0xFF008972) : const Color(0xFF006FD1),
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                      height: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Feedback Text
-                  if (feedbackText.isNotEmpty)
-                    Text(
-                      feedbackText,
-                      textAlign: isPass ? TextAlign.center : TextAlign.start,
-                      style: GoogleFonts.dmSans(
-                        color: isPass ? const Color(0xFF008972) : const Color(0xFF006FD1),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                        height: 1.60,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ),
 
-        // Try Again / Next Button
-        Padding(
-          padding: const EdgeInsets.fromLTRB(25, 0, 25, 32),
-          child: GestureDetector(
-            onTap: isPass ? _nextQuestion : () => setState(() => _showFeedback = false),
-            child: isPass
-                ? Container(
+                // Feedback Card - wrapped in similar container style
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(25),
+                  color: Colors.white,
+                  child: Container(
                     width: double.infinity,
-                    height: 53,
+                    padding: const EdgeInsets.only(
+                      top: 41,
+                      left: 20,
+                      right: 20,
+                      bottom: 20,
+                    ),
                     decoration: ShapeDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment(0.00, 0.00),
-                        end: Alignment(0.69, 0.42),
-                        colors: [Color(0xFF008972), Color(0xFF047A66)],
-                      ),
+                      color: isPass
+                          ? const Color(0xFF008972).withValues(alpha: 0.05)
+                          : const Color(0xFF006FD1).withValues(alpha: 0.05),
                       shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: Colors.white),
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x4C008972),
-                          blurRadius: 30.10,
-                          offset: Offset(0, 14),
+                        side: BorderSide(
+                          width: 2,
+                          color: isPass
+                              ? const Color(0xFF008972).withValues(alpha: 0.2)
+                              : const Color(0xFF006FD1).withValues(alpha: 0.2),
                         ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: isPass
+                          ? CrossAxisAlignment.center
+                          : CrossAxisAlignment.start,
+                      children: [
+                        // Status Bar
+                        _buildStatusBar(statusScore, isPass),
+                        const SizedBox(height: 36),
+                        // Feedback Title
+                        Text(
+                          feedbackTitle,
+                          style: GoogleFonts.instrumentSerif(
+                            color: isPass
+                                ? const Color(0xFF008972)
+                                : const Color(0xFF006FD1),
+                            fontSize: 24,
+                            fontWeight: FontWeight.w400,
+                            height: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Feedback Text
+                        if (feedbackText.isNotEmpty)
+                          Text(
+                            feedbackText,
+                            textAlign: isPass
+                                ? TextAlign.center
+                                : TextAlign.start,
+                            style: GoogleFonts.dmSans(
+                              color: isPass
+                                  ? const Color(0xFF008972)
+                                  : const Color(0xFF006FD1),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                              height: 1.60,
+                            ),
+                          ),
                       ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Next moment →',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFFFFF7FB),
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  )
-                : Container(
-                    width: double.infinity,
-                    height: 53,
-                    decoration: ShapeDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment(0.00, 0.00),
-                        end: Alignment(0.69, 0.42),
-                        colors: [Color(0xFF006FD1), Color(0xFF006FD0)],
-                      ),
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: Colors.white),
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x4C006FD1),
-                          blurRadius: 30.10,
-                          offset: Offset(0, 14),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Try again',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFFFFF7FB),
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
                     ),
                   ),
+                ),
+
+                // Try Again / Next Button
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(25, 0, 25, 32),
+                  color: Colors.white,
+                  child: GestureDetector(
+                    onTap: isPass
+                        ? _nextQuestion
+                        : () => setState(() => _showFeedback = false),
+                    child: isPass
+                        ? Container(
+                            width: double.infinity,
+                            height: 53,
+                            decoration: ShapeDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment(0.00, 0.00),
+                                end: Alignment(0.69, 0.42),
+                                colors: [Color(0xFF008972), Color(0xFF047A66)],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(9999),
+                              ),
+                              shadows: const [
+                                BoxShadow(
+                                  color: Color(0x4C008972),
+                                  blurRadius: 30.10,
+                                  offset: Offset(0, 14),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Next moment →',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xFFFFF7FB),
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: double.infinity,
+                            height: 53,
+                            decoration: ShapeDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment(0.00, 0.00),
+                                end: Alignment(0.69, 0.42),
+                                colors: [Color(0xFF006FD1), Color(0xFF006FD0)],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(9999),
+                              ),
+                              shadows: const [
+                                BoxShadow(
+                                  color: Color(0x4C006FD1),
+                                  blurRadius: 30.10,
+                                  offset: Offset(0, 14),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Try again',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xFFFFF7FB),
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -684,7 +770,10 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
                     left: markerPosition,
                     top: 0,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: ShapeDecoration(
                         color: const Color(0xFF6BB9FF),
                         shape: RoundedRectangleBorder(
@@ -774,10 +863,7 @@ class RealtimeWaveformPainter extends CustomPainter {
   final List<double> amplitudes;
   final int maxBars;
 
-  RealtimeWaveformPainter({
-    required this.amplitudes,
-    required this.maxBars,
-  });
+  RealtimeWaveformPainter({required this.amplitudes, required this.maxBars});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -802,8 +888,7 @@ class RealtimeWaveformPainter extends CustomPainter {
     final maxBarHeight = size.height * 0.8;
     final minBarHeight = 4.0;
 
-    final paint = Paint()
-      ..style = PaintingStyle.fill;
+    final paint = Paint()..style = PaintingStyle.fill;
 
     // Calculate starting position to right-align the bars (new bars appear on right)
     final startIndex = maxBars - amplitudes.length;

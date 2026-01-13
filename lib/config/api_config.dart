@@ -10,6 +10,17 @@ class ApiConfig {
   static const String getUnansweredQuestions = '/api/questions/unanswered';
   static const String submitAnswer = '/api/questions/answer';
 
+  // Scenario Endpoints
+  static const String getScenariosWithConversations =
+      '/api/scenarios/with-conversations';
+
+  // Conversation Endpoints
+  static const String getEndGoals = '/api/end-goals';
+  static const String submitEndGoal = '/api/conversations/submit-end-goal';
+  static const String getQuestion = '/api/conversations/get-question';
+  static const String submitConversationAnswer =
+      '/api/conversations/submit-answer';
+
   // Google OAuth Configuration
   static const String googleWebClientId =
       '188595500592-390tlrlldrg0r2ls1pe074bqojsd724g.apps.googleusercontent.com';

@@ -34,7 +34,7 @@ class AuthService {
       final String? idToken = googleAuth.idToken;
 
       if (idToken == null) {
-        debugPrint('❌ [AuthService] No ID Token found');
+        debugPrint('[AuthService] No ID Token found');
         throw Exception('No ID Token found. Please try again.');
       }
 
@@ -44,7 +44,7 @@ class AuthService {
       final token = response['token'];
 
       if (user == null || token == null) {
-        debugPrint('❌ [AuthService] Invalid response from server: $response');
+        debugPrint('[AuthService] Invalid response from server: $response');
         throw Exception('Invalid response from server');
       }
 
@@ -63,12 +63,12 @@ class AuthService {
         },
       };
     } on PlatformException catch (e) {
-      debugPrint('❌ [AuthService] PlatformException: ${e.code} - ${e.message}');
+      debugPrint('[AuthService] PlatformException: ${e.code} - ${e.message}');
 
       try {
         await _googleSignIn.signOut();
       } catch (signOutError) {
-        debugPrint('⚠️ [AuthService] Error during sign out: $signOutError');
+        debugPrint('[AuthService] Error during sign out: $signOutError');
       }
 
       String errorMessage = 'Failed to sign in with Google';
@@ -91,13 +91,13 @@ class AuthService {
         '$errorMessage\n\nError Code: ${e.code}\nMessage: ${e.message}',
       );
     } catch (e, stackTrace) {
-      debugPrint('❌ [AuthService] Error during sign-in: $e');
+      debugPrint('[AuthService] Error during sign-in: $e');
       debugPrint('   StackTrace: $stackTrace');
 
       try {
         await _googleSignIn.signOut();
       } catch (signOutError) {
-        debugPrint('⚠️ [AuthService] Error during sign out: $signOutError');
+        debugPrint('[AuthService] Error during sign out: $signOutError');
       }
 
       rethrow;
@@ -106,7 +106,7 @@ class AuthService {
 
   /// Sign in with Apple and authenticate with backend (iOS only)
   static Future<Map<String, dynamic>> signInWithApple() async {
-    debugPrint('🍎 [AuthService] Starting Apple Sign-In...');
+    debugPrint('[AuthService] Starting Apple Sign-In...');
 
     try {
       // Check if Apple Sign-In is available (iOS 13+)
@@ -123,7 +123,7 @@ class AuthService {
         ],
       );
 
-      debugPrint('✅ [AuthService] Apple credentials received');
+      debugPrint('[AuthService] Apple credentials received');
       debugPrint('   User ID: ${credential.userIdentifier}');
       debugPrint('   Email: ${credential.email}');
 
@@ -131,7 +131,7 @@ class AuthService {
       final authorizationCode = credential.authorizationCode;
 
       if (identityToken == null) {
-        debugPrint('❌ [AuthService] No identity token from Apple');
+        debugPrint('[AuthService] No identity token from Apple');
         throw Exception('No identity token received from Apple');
       }
 
@@ -156,7 +156,7 @@ class AuthService {
       final token = response['token'];
 
       if (user == null || token == null) {
-        debugPrint('❌ [AuthService] Invalid response from server: $response');
+        debugPrint('[AuthService] Invalid response from server: $response');
         throw Exception('Invalid response from server');
       }
 
@@ -165,7 +165,7 @@ class AuthService {
 
       await saveSession(token.toString(), userId, userEmail);
 
-      debugPrint('✅ [AuthService] Apple Sign-In complete');
+      debugPrint('[AuthService] Apple Sign-In complete');
 
       return {
         'user': user,
@@ -177,7 +177,7 @@ class AuthService {
         },
       };
     } on SignInWithAppleAuthorizationException catch (e) {
-      debugPrint('❌ [AuthService] Apple Sign-In Authorization Error: ${e.code}');
+      debugPrint('[AuthService] Apple Sign-In Authorization Error: ${e.code}');
 
       if (e.code == AuthorizationErrorCode.canceled) {
         throw Exception('Apple Sign-In was cancelled');
@@ -193,7 +193,7 @@ class AuthService {
         throw Exception('Apple Sign-In error: ${e.message}');
       }
     } catch (e, stackTrace) {
-      debugPrint('❌ [AuthService] Error during Apple Sign-In: $e');
+      debugPrint('[AuthService] Error during Apple Sign-In: $e');
       debugPrint('   StackTrace: $stackTrace');
       rethrow;
     }
@@ -202,22 +202,22 @@ class AuthService {
   /// Sign out from both Google and the app
   static Future<void> signOut() async {
     debugPrint(
-      '🚪 [AuthService] Signing out from Google and clearing local session...',
+      '[AuthService] Signing out from Google and clearing local session...',
     );
     // Disconnect account to force account picker on next sign-in
     try {
       await _googleSignIn.disconnect();
     } catch (e) {
-      debugPrint('⚠️ [AuthService] Error disconnecting: $e');
+      debugPrint('[AuthService] Error disconnecting: $e');
     }
     // Also sign out (in case disconnect didn't work)
     try {
       await _googleSignIn.signOut();
     } catch (e) {
-      debugPrint('⚠️ [AuthService] Error signing out: $e');
+      debugPrint('[AuthService] Error signing out: $e');
     }
     await logout();
-    debugPrint('✅ [AuthService] Sign out complete');
+    debugPrint('[AuthService] Sign out complete');
   }
 
   /// Save user session
@@ -270,7 +270,7 @@ class AuthService {
 
       return userData;
     } catch (e) {
-      debugPrint('❌ [AuthService] Token validation failed: $e');
+      debugPrint('[AuthService] Token validation failed: $e');
       await logout();
       rethrow;
     }
@@ -314,7 +314,7 @@ class AuthService {
 
   /// Log current Google Sign-In configuration for debugging
   static void logConfiguration() {
-    debugPrint('📋 [AuthService] Google Sign-In Configuration:');
+    debugPrint('[AuthService] Google Sign-In Configuration:');
     debugPrint('   - Server Client ID: ${ApiConfig.googleWebClientId}');
     debugPrint('   - Package Name: com.rizzly.room42');
     debugPrint(
@@ -324,7 +324,7 @@ class AuthService {
 
   /// Sign in with Apple Tester account (for App Store review)
   static Future<Map<String, dynamic>> signInAsAppleTester() async {
-    debugPrint('🍎 [AuthService] Signing in as Apple Tester...');
+    debugPrint('[AuthService] Signing in as Apple Tester...');
 
     const String testUserId = '00000000-0000-0000-0000-000000000001';
     const String testEmail = 'apple.tester@talktojesus.app';
@@ -333,7 +333,7 @@ class AuthService {
 
     await saveSession(testToken, testUserId, testEmail);
 
-    debugPrint('✅ [AuthService] Apple Tester sign-in complete');
+    debugPrint('[AuthService] Apple Tester sign-in complete');
 
     return {
       'user': {
