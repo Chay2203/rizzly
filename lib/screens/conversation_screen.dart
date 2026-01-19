@@ -492,7 +492,7 @@ class _ConversationScreenState extends State<ConversationScreen>
                               size: 32,
                             )
                           : SvgPicture.asset(
-                              'assets/record.svg',
+                              'assets/svgs/record.svg',
                               width: 26,
                               height: 26,
                               colorFilter: const ColorFilter.mode(

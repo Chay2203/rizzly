@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../models/scenario_with_conversation.dart';
 import '../models/conversation.dart';
 import '../stores/main_store.dart';
@@ -117,33 +116,6 @@ class _ScenarioDetailScreenState extends State<ScenarioDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Scenario Image Placeholder
-                    if (scenario.imageUrl != null &&
-                        scenario.imageUrl!.isNotEmpty)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: CachedNetworkImage(
-                          imageUrl: scenario.imageUrl!,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            height: 200,
-                            width: double.infinity,
-                            color: Colors.grey.shade200,
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              _buildImagePlaceholder(),
-                        ),
-                      )
-                    else
-                      _buildImagePlaceholder(),
-
-                    const SizedBox(height: 24),
-
                     // Scenario Description
                     Text(
                       'The Scene',
@@ -347,39 +319,6 @@ class _ScenarioDetailScreenState extends State<ScenarioDetailScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
               child: _buildActionButton(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImagePlaceholder() {
-    return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.broken_image_outlined,
-              size: 48,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Image unavailable',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey.shade500,
-              ),
             ),
           ],
         ),

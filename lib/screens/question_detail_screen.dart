@@ -270,110 +270,110 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Question Area
-                Container(
-                  width: double.infinity,
+        // Question Area
+        Container(
+          width: double.infinity,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 32,
                   ),
-                  decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (_isLoadingNextQuestion)
-                        SizedBox(
-                          width: 328,
-                          child: Opacity(
-                            opacity: 0.80,
-                            child: Text(
-                              'Loading next question...',
-                              style: GoogleFonts.instrumentSerif(
-                                color: const Color(0xFF121212),
-                                fontSize: 32,
-                                fontWeight: FontWeight.w400,
-                                height: 1.30,
-                                letterSpacing: 0.72,
-                              ),
-                            ),
-                          ),
-                        )
-                      else if (currentQuestion != null) ...[
-                        SizedBox(
-                          width: 328,
-                          child: Opacity(
-                            opacity: 0.80,
-                            child: Text(
+          decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_isLoadingNextQuestion)
+                SizedBox(
+                  width: 328,
+                  child: Opacity(
+                    opacity: 0.80,
+                    child: Text(
+                      'Loading next question...',
+                      style: GoogleFonts.instrumentSerif(
+                        color: const Color(0xFF121212),
+                        fontSize: 32,
+                        fontWeight: FontWeight.w400,
+                        height: 1.30,
+                        letterSpacing: 0.72,
+                      ),
+                    ),
+                  ),
+                )
+              else if (currentQuestion != null) ...[
+                SizedBox(
+                  width: 328,
+                  child: Opacity(
+                    opacity: 0.80,
+                    child: Text(
                               currentQuestion['text'] ??
                                   'No question available',
-                              style: GoogleFonts.instrumentSerif(
-                                color: const Color(0xFF121212),
-                                fontSize: 32,
-                                fontWeight: FontWeight.w400,
-                                height: 1.30,
-                                letterSpacing: 0.72,
-                              ),
-                            ),
-                          ),
+                      style: GoogleFonts.instrumentSerif(
+                        color: const Color(0xFF121212),
+                        fontSize: 32,
+                        fontWeight: FontWeight.w400,
+                        height: 1.30,
+                        letterSpacing: 0.72,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Opacity(
+                  opacity: 0.30,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.lightbulb_outline,
+                        size: 16,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Think less. Don\'t defend. Just play.',
+                        style: GoogleFonts.dmSans(
+                          color: Colors.black,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          height: 1.30,
+                          letterSpacing: 0.26,
                         ),
-                        const SizedBox(height: 10),
-                        Opacity(
-                          opacity: 0.30,
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.lightbulb_outline,
-                                size: 16,
-                                color: Colors.black,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Think less. Don\'t defend. Just play.',
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.30,
-                                  letterSpacing: 0.26,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ],
                   ),
                 ),
+              ],
+            ],
+          ),
+        ),
 
                 // Waveform when recording
                 if (_isRecording)
                   SizedBox(height: 200, child: Center(child: _buildWaveform())),
 
-                // Bottom Section with Mic
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: Column(
-                    children: [
-                      _buildRecordButton(),
-                      const SizedBox(height: 10),
-                      Opacity(
-                        opacity: 0.30,
-                        child: Text(
-                          _isSubmitting
-                              ? 'Analyzing'
-                              : (_isRecording ? 'Tap to stop' : 'Tap to speak'),
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFF121212),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                            height: 1.60,
-                          ),
-                        ),
-                      ),
-                    ],
+        // Bottom Section with Mic
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          child: Column(
+            children: [
+              _buildRecordButton(),
+              const SizedBox(height: 10),
+              Opacity(
+                opacity: 0.30,
+                child: Text(
+                  _isSubmitting
+                      ? 'Analyzing'
+                      : (_isRecording ? 'Tap to stop' : 'Tap to speak'),
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    color: const Color(0xFF121212),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    height: 1.60,
+                  ),
+                ),
+              ),
+            ],
                   ),
                 ),
               ],
@@ -497,7 +497,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
                               size: 32,
                             )
                           : SvgPicture.asset(
-                              'assets/record.svg',
+                              'assets/svgs/record.svg',
                               width: 26,
                               height: 26,
                               colorFilter: const ColorFilter.mode(
@@ -532,187 +532,187 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Question Section
-                Container(
-                  width: double.infinity,
+        // Question Section
+        Container(
+          width: double.infinity,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 32,
                   ),
-                  decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
-                  child: SizedBox(
-                    width: 328,
-                    child: Opacity(
-                      opacity: 0.80,
-                      child: Text(
-                        currentQuestion?['text'] ?? '',
-                        style: GoogleFonts.instrumentSerif(
-                          color: const Color(0xFF121212),
-                          fontSize: 32,
-                          fontWeight: FontWeight.w400,
-                          height: 1.30,
-                          letterSpacing: 0.72,
-                        ),
-                      ),
-                    ),
-                  ),
+          decoration: const BoxDecoration(color: Color(0xFFE3E3E3)),
+          child: SizedBox(
+            width: 328,
+            child: Opacity(
+              opacity: 0.80,
+              child: Text(
+                currentQuestion?['text'] ?? '',
+                style: GoogleFonts.instrumentSerif(
+                  color: const Color(0xFF121212),
+                  fontSize: 32,
+                  fontWeight: FontWeight.w400,
+                  height: 1.30,
+                  letterSpacing: 0.72,
                 ),
+              ),
+            ),
+          ),
+        ),
 
                 // Feedback Card - wrapped in similar container style
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(25),
+            padding: const EdgeInsets.all(25),
                   color: Colors.white,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                      top: 41,
-                      left: 20,
-                      right: 20,
-                      bottom: 20,
-                    ),
-                    decoration: ShapeDecoration(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(
+                top: 41,
+                left: 20,
+                right: 20,
+                bottom: 20,
+              ),
+              decoration: ShapeDecoration(
+                color: isPass
+                    ? const Color(0xFF008972).withValues(alpha: 0.05)
+                    : const Color(0xFF006FD1).withValues(alpha: 0.05),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 2,
+                    color: isPass
+                        ? const Color(0xFF008972).withValues(alpha: 0.2)
+                        : const Color(0xFF006FD1).withValues(alpha: 0.2),
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: isPass
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.start,
+                children: [
+                  // Status Bar
+                  _buildStatusBar(statusScore, isPass),
+                  const SizedBox(height: 36),
+                  // Feedback Title
+                  Text(
+                    feedbackTitle,
+                    style: GoogleFonts.instrumentSerif(
                       color: isPass
-                          ? const Color(0xFF008972).withValues(alpha: 0.05)
-                          : const Color(0xFF006FD1).withValues(alpha: 0.05),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 2,
-                          color: isPass
-                              ? const Color(0xFF008972).withValues(alpha: 0.2)
-                              : const Color(0xFF006FD1).withValues(alpha: 0.2),
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                          ? const Color(0xFF008972)
+                          : const Color(0xFF006FD1),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                      height: 1,
                     ),
-                    child: Column(
-                      crossAxisAlignment: isPass
-                          ? CrossAxisAlignment.center
-                          : CrossAxisAlignment.start,
-                      children: [
-                        // Status Bar
-                        _buildStatusBar(statusScore, isPass),
-                        const SizedBox(height: 36),
-                        // Feedback Title
-                        Text(
-                          feedbackTitle,
-                          style: GoogleFonts.instrumentSerif(
-                            color: isPass
-                                ? const Color(0xFF008972)
-                                : const Color(0xFF006FD1),
-                            fontSize: 24,
-                            fontWeight: FontWeight.w400,
-                            height: 1,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        // Feedback Text
-                        if (feedbackText.isNotEmpty)
-                          Text(
-                            feedbackText,
+                  ),
+                  const SizedBox(height: 8),
+                  // Feedback Text
+                  if (feedbackText.isNotEmpty)
+                    Text(
+                      feedbackText,
                             textAlign: isPass
                                 ? TextAlign.center
                                 : TextAlign.start,
-                            style: GoogleFonts.dmSans(
-                              color: isPass
-                                  ? const Color(0xFF008972)
-                                  : const Color(0xFF006FD1),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              height: 1.60,
-                            ),
-                          ),
-                      ],
+                      style: GoogleFonts.dmSans(
+                        color: isPass
+                            ? const Color(0xFF008972)
+                            : const Color(0xFF006FD1),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                        height: 1.60,
+                      ),
                     ),
-                  ),
-                ),
+                ],
+            ),
+          ),
+        ),
 
-                // Try Again / Next Button
+        // Try Again / Next Button
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(25, 0, 25, 32),
+          padding: const EdgeInsets.fromLTRB(25, 0, 25, 32),
                   color: Colors.white,
-                  child: GestureDetector(
-                    onTap: isPass
-                        ? _nextQuestion
-                        : () => setState(() => _showFeedback = false),
-                    child: isPass
-                        ? Container(
-                            width: double.infinity,
-                            height: 53,
-                            decoration: ShapeDecoration(
-                              gradient: const LinearGradient(
-                                begin: Alignment(0.00, 0.00),
-                                end: Alignment(0.69, 0.42),
-                                colors: [Color(0xFF008972), Color(0xFF047A66)],
-                              ),
-                              shape: RoundedRectangleBorder(
+          child: GestureDetector(
+            onTap: isPass
+                ? _nextQuestion
+                : () => setState(() => _showFeedback = false),
+            child: isPass
+                ? Container(
+                    width: double.infinity,
+                    height: 53,
+                    decoration: ShapeDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment(0.00, 0.00),
+                        end: Alignment(0.69, 0.42),
+                        colors: [Color(0xFF008972), Color(0xFF047A66)],
+                      ),
+                      shape: RoundedRectangleBorder(
                                 side: const BorderSide(
                                   width: 1,
                                   color: Colors.white,
                                 ),
-                                borderRadius: BorderRadius.circular(9999),
-                              ),
-                              shadows: const [
-                                BoxShadow(
-                                  color: Color(0x4C008972),
-                                  blurRadius: 30.10,
-                                  offset: Offset(0, 14),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Next moment →',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  color: const Color(0xFFFFF7FB),
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            width: double.infinity,
-                            height: 53,
-                            decoration: ShapeDecoration(
-                              gradient: const LinearGradient(
-                                begin: Alignment(0.00, 0.00),
-                                end: Alignment(0.69, 0.42),
-                                colors: [Color(0xFF006FD1), Color(0xFF006FD0)],
-                              ),
-                              shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9999),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x4C008972),
+                          blurRadius: 30.10,
+                          offset: Offset(0, 14),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Next moment →',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFFFF7FB),
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    width: double.infinity,
+                    height: 53,
+                    decoration: ShapeDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment(0.00, 0.00),
+                        end: Alignment(0.69, 0.42),
+                        colors: [Color(0xFF006FD1), Color(0xFF006FD0)],
+                      ),
+                      shape: RoundedRectangleBorder(
                                 side: const BorderSide(
                                   width: 1,
                                   color: Colors.white,
                                 ),
-                                borderRadius: BorderRadius.circular(9999),
-                              ),
-                              shadows: const [
-                                BoxShadow(
-                                  color: Color(0x4C006FD1),
-                                  blurRadius: 30.10,
-                                  offset: Offset(0, 14),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Try again',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  color: const Color(0xFFFFF7FB),
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
+                        borderRadius: BorderRadius.circular(9999),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x4C006FD1),
+                          blurRadius: 30.10,
+                          offset: Offset(0, 14),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Try again',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFFFF7FB),
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                           ),
                   ),
                 ),
               ],
-            ),
+                  ),
           ),
         ),
       ],

@@ -42,6 +42,7 @@ class AuthService {
 
       final user = response['user'];
       final token = response['token'];
+      final isNewUser = response['isNewUser'] ?? false;
 
       if (user == null || token == null) {
         debugPrint('[AuthService] Invalid response from server: $response');
@@ -53,9 +54,12 @@ class AuthService {
 
       await saveSession(token.toString(), userId, userEmail);
 
+      debugPrint('[AuthService] isNewUser: $isNewUser');
+
       return {
         'user': user,
         'token': token,
+        'isNewUser': isNewUser,
         'googleUser': {
           'email': googleUser.email,
           'displayName': googleUser.displayName,
@@ -154,6 +158,7 @@ class AuthService {
 
       final user = response['user'];
       final token = response['token'];
+      final isNewUser = response['isNewUser'] ?? false;
 
       if (user == null || token == null) {
         debugPrint('[AuthService] Invalid response from server: $response');
@@ -166,10 +171,12 @@ class AuthService {
       await saveSession(token.toString(), userId, userEmail);
 
       debugPrint('[AuthService] Apple Sign-In complete');
+      debugPrint('[AuthService] isNewUser: $isNewUser');
 
       return {
         'user': user,
         'token': token,
+        'isNewUser': isNewUser,
         'appleUser': {
           'email': credential.email,
           'fullName': fullName,

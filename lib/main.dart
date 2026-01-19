@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'widgets/floating_hearts.dart';
 import 'services/auth_service.dart';
 import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 import 'stores/main_store.dart';
 
 void main() {
@@ -38,6 +39,8 @@ class _RizzlyAppState extends State<RizzlyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.white,
+        fontFamily: GoogleFonts.poppins().fontFamily,
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       home: SplashScreen(store: _mainStore),
     );
@@ -131,7 +134,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _goToLanding() {
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => LandingPage(store: widget.store)),
+      MaterialPageRoute(builder: (_) => LoginScreen(store: widget.store)),
     );
   }
 
@@ -406,7 +409,7 @@ class _LandingPageState extends State<LandingPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
-                                    'assets/google.svg',
+                                    'assets/svgs/google.svg',
                                     height: 24,
                                     width: 24,
                                   ),

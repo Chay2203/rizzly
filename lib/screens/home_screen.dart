@@ -191,16 +191,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
+              sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      _buildScenarioCard(active[index], 'active'),
+                  (context, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildScenarioCard(active[index], 'active'),
+                  ),
                   childCount: active.length,
                 ),
               ),
@@ -221,16 +217,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
+              sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      _buildScenarioCard(newScenarios[index], 'new'),
+                  (context, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildScenarioCard(newScenarios[index], 'new'),
+                  ),
                   childCount: newScenarios.length,
                 ),
               ),
@@ -251,16 +243,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
+              sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      _buildScenarioCard(completed[index], 'completed'),
+                  (context, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildScenarioCard(completed[index], 'completed'),
+                  ),
                   childCount: completed.length,
                 ),
               ),
@@ -278,16 +266,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
+              sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      _buildScenarioCard(failed[index], 'failed'),
+                  (context, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildScenarioCard(failed[index], 'failed'),
+                  ),
                   childCount: failed.length,
                 ),
               ),
@@ -316,37 +300,23 @@ class _HomeScreenState extends State<HomeScreen> {
     ScenarioWithConversation scenario,
     String category,
   ) {
-    Color cardColor;
-    Color borderColor;
+    final bool isActive = category == 'active';
 
-    switch (category) {
-      case 'completed':
-        cardColor = Colors.green.shade50;
-        borderColor = Colors.green.shade300;
-        break;
-      case 'failed':
-        cardColor = Colors.red.shade50;
-        borderColor = Colors.red.shade300;
-        break;
-      case 'active':
-        cardColor = Colors.blue.shade50;
-        borderColor = Colors.blue.shade300;
-        break;
-      default:
-        cardColor = Colors.white;
-        borderColor = Colors.grey.shade300;
+    // Get subtitle - use description or challenge text
+    String subtitle = scenario.scenario.description;
+    if (category == 'active' && scenario.conversation?.endGoal != null) {
+      subtitle = scenario.conversation!.endGoal!.name;
     }
 
     return GestureDetector(
       onTap: () => _navigateToScenarioDetail(scenario),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
-          color: cardColor,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: borderColor, width: 1),
-            borderRadius: BorderRadius.circular(4),
-          ),
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           shadows: const [
             BoxShadow(
               color: Color(0x19000000),
@@ -356,58 +326,50 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Scenario Name
-            Opacity(
-              opacity: 0.80,
-              child: Text(
-                scenario.scenario.name,
-                style: GoogleFonts.instrumentSerif(
-                  color: const Color(0xFF121212),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w400,
-                  height: 1.2,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Girl Name only
-            Opacity(
-              opacity: 0.60,
-              child: Text(
-                scenario.girl.name,
-                style: GoogleFonts.poppins(
-                  color: const Color(0xFF121212),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  height: 1.40,
-                ),
-              ),
-            ),
-            // End Goal if active
-            if (category == 'active' &&
-                scenario.conversation?.endGoal != null) ...[
-              const SizedBox(height: 6),
-              Opacity(
-                opacity: 0.50,
-                child: Text(
-                  'Goal: ${scenario.conversation!.endGoal!.name}',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF121212),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
-                    height: 1.40,
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Opacity(
+                    opacity: isActive ? 0.80 : 0.50,
+                    child: Text(
+                      scenario.scenario.name,
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.instrumentSerif(
+                        color: const Color(0xFF121212),
+                        fontSize: 32,
+                        fontWeight: FontWeight.w400,
+                        height: 1,
+                      ),
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  const SizedBox(height: 4),
+                  Opacity(
+                    opacity: isActive ? 0.50 : 0.30,
+                    child: Text(
+                      subtitle,
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xFF121212),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                        height: 1.60,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
+            const SizedBox(width: 16),
+            Image.asset('assets/images/blue_arrow.png', width: 80, height: 80),
           ],
         ),
       ),
