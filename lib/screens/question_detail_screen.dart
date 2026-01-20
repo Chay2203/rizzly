@@ -451,64 +451,53 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
                 ),
               ),
             )
-          : AnimatedBuilder(
-              animation: _pulseController,
-              builder: (context, child) {
-                final scale = _isRecording
-                    ? 1.0 + (_pulseController.value * 0.1)
-                    : 1.0;
-                return Transform.scale(
-                  scale: scale,
-                  child: Container(
-                    width: 72,
-                    height: 72,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.00, 0.00),
-                        end: const Alignment(0.69, 0.42),
-                        colors: _isRecording
-                            ? [const Color(0xFFFF6F91), const Color(0xFFFF4470)]
-                            : [
-                                const Color(0xFF006FD1),
-                                const Color(0xFF006FD0),
-                              ],
-                      ),
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: Colors.white),
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                      shadows: [
-                        BoxShadow(
-                          color: _isRecording
-                              ? const Color(0x4CFF6F91)
-                              : const Color(0x4C006FD1),
-                          blurRadius: 22.80,
-                          offset: const Offset(0, 19),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: _isRecording
-                          ? const Icon(
-                              Icons.stop_rounded,
-                              color: Colors.white,
-                              size: 32,
-                            )
-                          : SvgPicture.asset(
-                              'assets/svgs/record.svg',
-                              width: 26,
-                              height: 26,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                    ),
+          : Container(
+              width: 72,
+              height: 72,
+              clipBehavior: Clip.antiAlias,
+              decoration: ShapeDecoration(
+                gradient: LinearGradient(
+                  begin: const Alignment(0.00, 0.00),
+                  end: const Alignment(0.69, 0.42),
+                  colors: _isRecording
+                      ? [const Color(0xFFFF6F91), const Color(0xFFFF4470)]
+                      : [
+                          const Color(0xFF006FD1),
+                          const Color(0xFF006FD0),
+                        ],
+                ),
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 1, color: Colors.white),
+                  borderRadius: BorderRadius.circular(9999),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: _isRecording
+                        ? const Color(0x4CFF6F91)
+                        : const Color(0x4C006FD1),
+                    blurRadius: 22.80,
+                    offset: const Offset(0, 19),
+                    spreadRadius: 0,
                   ),
-                );
-              },
+                ],
+              ),
+              child: Center(
+                child: _isRecording
+                    ? const Icon(
+                        Icons.stop_rounded,
+                        color: Colors.white,
+                        size: 32,
+                      )
+                    : SvgPicture.asset(
+                        'assets/svgs/record.svg',
+                        width: 26,
+                        height: 26,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+              ),
             ),
     );
   }

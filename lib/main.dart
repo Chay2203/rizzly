@@ -143,15 +143,10 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Text(
-          'Rizzly',
-          style: GoogleFonts.playfairDisplay(
-            fontSize: 48,
-            fontWeight: FontWeight.w500,
-            fontStyle: FontStyle.italic,
-            letterSpacing: 0,
-            color: Colors.black,
-          ),
+        child: SvgPicture.asset(
+          'assets/svgs/logo.svg',
+          width: 100,
+          height: 100,
         ),
       ),
     );

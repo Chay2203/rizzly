@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../services/auth_service.dart';
 import '../stores/main_store.dart';
+import '../widgets/floating_hearts.dart';
 import 'onboarding_screen.dart';
 import 'home_screen.dart';
 
@@ -197,194 +198,189 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 53,
-            left: 16,
-            right: 16,
-            bottom: 36,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Top section: Logo and tagline
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+      body: Stack(
+        children: [
+          const FloatingHeartsBackground(),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 53,
+                left: 16,
+                right: 16,
+                bottom: 36,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 250,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: logoSize,
-                          height: logoSize,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFF04001B),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.57),
-                            ),
-                          ),
-                          child: Center(
-                            child: Image.asset(
-                              'assets/images/small_logo.png',
+                  // Top section: Logo and tagline
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 250,
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
                               width: logoSize,
                               height: logoSize,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: screenWidth > 360 ? 360.0 : screenWidth - 32,
-                    child: Text(
-                      'Your dating coach',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: const Color(0xFF121212),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w300,
-                        height: 1.60,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // Bottom section: Buttons
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Google Sign-In Button
-                  SizedBox(
-                    width: buttonWidth,
-                    child: GestureDetector(
-                      onTap: _isGoogleLoading ? null : _handleGoogleSignIn,
-                      child: Container(
-                        height: 60,
-                        padding: const EdgeInsets.all(15),
-                        decoration: ShapeDecoration(
-                          gradient: const RadialGradient(
-                            center: Alignment(0, 0),
-                            radius: 2.5,
-                            colors: [Color(0xFF333333), Colors.black],
-                          ),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                              width: 1,
-                              color: Colors.white,
-                            ),
-                            borderRadius: BorderRadius.circular(14998.50),
-                          ),
-                          shadows: const [
-                            BoxShadow(
-                              color: Color(0x26006FD1),
-                              blurRadius: 30.10,
-                              offset: Offset(0, 0),
-                              spreadRadius: 0,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: const Color(0xFF04001B),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.57),
+                                ),
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  'assets/images/small_logo.png',
+                                  width: logoSize,
+                                  height: logoSize,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                        child: _isGoogleLoading
-                            ? const Center(
-                                child: SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CupertinoActivityIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  _buildSvgIcon(
-                                    'assets/svgs/google.svg',
-                                    fallbackIcon: Icons.account_circle,
-                                  ),
-                                  const SizedBox(width: 15),
-                                  Text(
-                                    'Continue with Google',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: const Color(0xFFFFF7FB),
-                                      fontSize: 19.22,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.20,
-                                    ),
-                                  ),
-                                ],
-                              ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Apple Sign-In Button
-                  SizedBox(
-                    width: buttonWidth,
-                    child: GestureDetector(
-                      onTap: _isAppleLoading ? null : _handleAppleSignIn,
-                      child: Container(
-                        height: 60,
-                        padding: const EdgeInsets.all(15),
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(width: 1),
-                            borderRadius: BorderRadius.circular(14998.50),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: screenWidth > 360 ? 360.0 : screenWidth - 32,
+                        child: Text(
+                          'Your dating coach',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color(0xFF121212),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            height: 1.60,
                           ),
                         ),
-                        child: _isAppleLoading
-                            ? const Center(
-                                child: SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CupertinoActivityIndicator(),
-                                ),
-                              )
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  _buildSvgIcon(
-                                    'assets/svgs/apple.svg',
-                                    color: Colors.black,
-                                    fallbackIcon: Icons.apple,
-                                  ),
-                                  const SizedBox(width: 15),
-                                  Text(
-                                    'Continue with Apple',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 19.22,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.20,
-                                    ),
-                                  ),
-                                ],
-                              ),
                       ),
-                    ),
+                    ],
+                  ),
+
+                  // Bottom section: Buttons
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Google Sign-In Button
+                      SizedBox(
+                        width: buttonWidth,
+                        child: GestureDetector(
+                          onTap: _isGoogleLoading ? null : _handleGoogleSignIn,
+                          child: Container(
+                            height: 60,
+                            padding: const EdgeInsets.all(15),
+                            decoration: ShapeDecoration(
+                              color: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(14998.50),
+                              ),
+                            ),
+                            child: _isGoogleLoading
+                                ? const Center(
+                                    child: SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CupertinoActivityIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      _buildSvgIcon(
+                                        'assets/svgs/google.svg',
+                                        fallbackIcon: Icons.account_circle,
+                                      ),
+                                      const SizedBox(width: 15),
+                                      Text(
+                                        'Continue with Google',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: const Color(0xFFFFF7FB),
+                                          fontSize: 19.22,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Apple Sign-In Button
+                      SizedBox(
+                        width: buttonWidth,
+                        child: GestureDetector(
+                          onTap: _isAppleLoading ? null : _handleAppleSignIn,
+                          child: Container(
+                            height: 60,
+                            padding: const EdgeInsets.all(15),
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(width: 1),
+                                borderRadius: BorderRadius.circular(14998.50),
+                              ),
+                            ),
+                            child: _isAppleLoading
+                                ? const Center(
+                                    child: SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CupertinoActivityIndicator(),
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      _buildSvgIcon(
+                                        'assets/svgs/apple.svg',
+                                        color: Colors.black,
+                                        fallbackIcon: Icons.apple,
+                                      ),
+                                      const SizedBox(width: 15),
+                                      Text(
+                                        'Continue with Apple',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 19.22,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

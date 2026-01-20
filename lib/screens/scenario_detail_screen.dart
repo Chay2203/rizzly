@@ -161,34 +161,20 @@ class _ScenarioDetailScreenState extends State<ScenarioDetailScreen> {
                         girl.personality!.isNotEmpty) ...[
                       const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
+                        padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.blue.shade200),
+                          border: Border.all(color: Colors.orange.shade800),
                         ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.psychology_outlined,
-                              color: Colors.blue.shade700,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                girl.personality!,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.blue.shade900,
-                                ),
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          girl.personality!,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.instrumentSerif(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.orange.shade800,
+                          ),
                         ),
                       ),
                     ],
@@ -367,14 +353,14 @@ class _ScenarioDetailScreenState extends State<ScenarioDetailScreen> {
         height: 56,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(28),
           border: borderColor != null
               ? Border.all(color: borderColor, width: 1.5)
               : null,
           boxShadow: onPressed != null
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.black.withValues(alpha: 0.15),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),

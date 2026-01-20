@@ -138,7 +138,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       onTap: _nextPage,
                       child: Container(
                         height: 53,
-                        padding: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 12,
+                        ),
                         decoration: ShapeDecoration(
                           gradient: const LinearGradient(
                             begin: Alignment(0.00, 0.00),
@@ -161,21 +164,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ],
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              _getButtonText(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Color(0xFFFFF7FB),
-                                fontSize: 19.22,
-                                fontWeight: FontWeight.w500,
-                                height: 1.20,
-                              ),
+                        child: Center(
+                          child: Text(
+                            _getButtonText(),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(
+                              color: Color(0xFFFFF7FB),
+                              fontSize: 19.22,
+                              fontWeight: FontWeight.w500,
+                              height: 1.20,
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../stores/main_store.dart';
 import 'home_screen.dart';
@@ -18,14 +19,6 @@ class TestimonialsScreen extends StatefulWidget {
 }
 
 class _TestimonialsScreenState extends State<TestimonialsScreen> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   void _buildProfile() {
     Navigator.pushReplacement(
       context,
@@ -47,235 +40,227 @@ class _TestimonialsScreenState extends State<TestimonialsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 36),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 53,
-                      left: 16,
-                      right: 16,
-                    ),
-                    child: Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Star ratings and title
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 200),
-                        // Star ratings and title
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // Star ratings
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(5, (index) {
-                                return Container(
-                                  width: 26.86,
-                                  height: 26.86,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 6.715,
-                                  ),
-                                  child: const Icon(
-                                    Icons.star,
-                                    color: Color(0xFFFFD700),
-                                    size: 26.86,
-                                  ),
-                                );
-                              }),
-                            ),
-                            const SizedBox(height: 14),
-                            SizedBox(
-                              width: contentWidth,
-                              child: Opacity(
-                                opacity: 0.80,
-                                child: Text(
-                                  '85% users love Rizzly.',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.instrumentSerif(
-                                    color: const Color(0xFF121212),
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.30,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 28),
-
-                        // Stats cards
+                        // Star ratings
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 16,
-                                ),
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.36),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Text(
-                                        '93%',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Color(0xFF0170D2),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          height: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Opacity(
-                                        opacity: 0.50,
-                                        child: Text(
-                                          'CONFIDENCE BOOST',
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12.36,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.40,
-                                            letterSpacing: 0.37,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(5, (index) {
+                            return Container(
+                              width: 26.86,
+                              height: 26.86,
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 6.715,
                               ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 16,
-                                ),
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.36),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Text(
-                                        '4.2x',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Color(0xFF0170D2),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          height: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Opacity(
-                                        opacity: 0.50,
-                                        child: Text(
-                                          'MORE 2ND DATES',
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12.36,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.40,
-                                            letterSpacing: 0.37,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              child: SvgPicture.asset(
+                                'assets/svgs/star.svg',
+                                width: 26.86,
+                                height: 26.86,
                               ),
-                            ),
-                          ],
+                            );
+                          }),
                         ),
-
-                        const SizedBox(height: 28),
-
-                        // Testimonials scrollable section
+                        const SizedBox(height: 14),
                         SizedBox(
-                          width: double.infinity,
-                          height: 156,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              _buildTestimonialCard(
-                                quote: '"Better than 10 years of therapy."',
-                                author: '- Harry P., Bangalore',
-                                width: screenWidth > 234
-                                    ? 234.0
-                                    : screenWidth - 64,
+                          width: contentWidth,
+                          child: Opacity(
+                            opacity: 0.80,
+                            child: Text(
+                              '85% users love Rizzly.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.instrumentSerif(
+                                color: const Color(0xFF121212),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w400,
+                                height: 1.30,
                               ),
-                              const SizedBox(width: 8),
-                              _buildTestimonialCard(
-                                quote: '"Rizzly\'s insights are invaluable!"',
-                                author: '- Mark T., London',
-                                width: screenWidth > 234
-                                    ? 234.0
-                                    : screenWidth - 64,
-                              ),
-                              const SizedBox(width: 8),
-                              _buildTestimonialCard(
-                                quote:
-                                    '"I used to freeze. Now I crave the tension."',
-                                author: '- Sarah L., New York',
-                                width: screenWidth > 234
-                                    ? 234.0
-                                    : screenWidth - 64,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
+
+                    const SizedBox(height: 28),
+
+                    // Stats cards
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 16,
+                            ),
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.36),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    '93%',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Color(0xFF0170D2),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Opacity(
+                                    opacity: 0.50,
+                                    child: Text(
+                                      'CONFIDENCE BOOST',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12.36,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.40,
+                                        letterSpacing: 0.37,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 16,
+                            ),
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.36),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    '4.2x',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Color(0xFF0170D2),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Opacity(
+                                    opacity: 0.50,
+                                    child: Text(
+                                      'MORE 2ND DATES',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12.36,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.40,
+                                        letterSpacing: 0.37,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 28),
+                  ],
                 ),
               ),
+            ),
 
-              const SizedBox(height: 40),
+            // Testimonials scrollable section (edge to edge)
+            SizedBox(
+              width: screenWidth,
+              height: 156,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  _buildTestimonialCard(
+                    quote: '"Better than 10 years of therapy."',
+                    author: '- Harry P., Bangalore',
+                    width: screenWidth > 234 ? 234.0 : screenWidth - 64,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildTestimonialCard(
+                    quote: '"Rizzly\'s insights are invaluable!"',
+                    author: '- Mark T., London',
+                    width: screenWidth > 234 ? 234.0 : screenWidth - 64,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildTestimonialCard(
+                    quote: '"I used to freeze. Now I crave the tension."',
+                    author: '- Sarah L., New York',
+                    width: screenWidth > 234 ? 234.0 : screenWidth - 64,
+                  ),
+                ],
+              ),
+            ),
 
-              // Build my profile button
-              Center(
+            const SizedBox(height: 28),
+
+            // Build my profile button
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 36),
+              child: Center(
                 child: SizedBox(
                   width: buttonWidth,
                   child: GestureDetector(
                     onTap: _buildProfile,
                     child: Container(
                       height: 53,
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 12,
+                      ),
                       decoration: ShapeDecoration(
                         gradient: const LinearGradient(
                           begin: Alignment(0.00, 0.00),
@@ -295,28 +280,25 @@ class _TestimonialsScreenState extends State<TestimonialsScreen> {
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Build my profile',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Color(0xFFFFF7FB),
-                              fontSize: 19.22,
-                              fontWeight: FontWeight.w500,
-                              height: 1.20,
-                            ),
+                      child: Center(
+                        child: Text(
+                          'Build my profile',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: const TextStyle(
+                            color: Color(0xFFFFF7FB),
+                            fontSize: 19.22,
+                            fontWeight: FontWeight.w500,
+                            height: 1.20,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -334,7 +316,7 @@ class _TestimonialsScreenState extends State<TestimonialsScreen> {
       decoration: ShapeDecoration(
         color: const Color(0xFFFFF4E6),
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1.77, color: Colors.black.withOpacity(0.05)),
+          side: BorderSide(width: 1.77, color: Colors.black.withValues(alpha: 0.05)),
           borderRadius: BorderRadius.circular(12.36),
         ),
       ),

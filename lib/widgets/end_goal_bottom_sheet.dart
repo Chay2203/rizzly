@@ -20,6 +20,7 @@ class EndGoalBottomSheet extends StatefulWidget {
 
 class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
   String? _selectedEndGoalId;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -45,7 +46,11 @@ class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
   }
 
   Future<void> _submitEndGoal() async {
-    if (_selectedEndGoalId == null) return;
+    if (_selectedEndGoalId == null || _isSubmitting) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
 
     try {
       // Submit the end goal
@@ -63,6 +68,9 @@ class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
       }
     } catch (e) {
       if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to set goal: $e'),
@@ -172,7 +180,7 @@ class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? Colors.black.withOpacity(0.05)
+                                ? Colors.black.withValues(alpha: 0.05)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -262,14 +270,24 @@ class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
                     width: double.infinity,
                     height: 56,
                     decoration: BoxDecoration(
+                      gradient: _selectedEndGoalId != null
+                          ? const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF2D2D2D),
+                                Color(0xFF1A1A1A),
+                              ],
+                            )
+                          : null,
                       color: _selectedEndGoalId != null
-                          ? Colors.black
+                          ? null
                           : Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(28),
                       boxShadow: _selectedEndGoalId != null
                           ? [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
+                                color: Colors.black.withValues(alpha: 0.15),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -277,18 +295,20 @@ class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
                           : null,
                     ),
                     child: Center(
-                      child: Text(
-                        'Start Conversation',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.instrumentSerif(
-                          color: _selectedEndGoalId != null
-                              ? Colors.white
-                              : Colors.grey.shade600,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      child: _isSubmitting
+                          ? const CupertinoActivityIndicator(color: Colors.white)
+                          : Text(
+                              'Start Conversation',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.instrumentSerif(
+                                color: _selectedEndGoalId != null
+                                    ? Colors.white
+                                    : Colors.grey.shade600,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -324,9 +344,9 @@ class _EndGoalBottomSheetState extends State<EndGoalBottomSheet> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
