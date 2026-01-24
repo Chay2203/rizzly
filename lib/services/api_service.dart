@@ -7,11 +7,29 @@ import '../config/api_config.dart';
 
 class ApiService {
   static String? _token;
+  static bool _isTestMode = false;
+
+  // Hardcoded test token
+  static const String _testToken =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0ODNlOTBlMi0wMmZjLTQxZDgtYTUwOS04NTkzYjZhYzhlZjYiLCJpYXQiOjE3Njg5NDM4ODQsImV4cCI6MTgzMjAxNTg4NH0.bURGwoA7XTwS9zt-9gPHeA9vFfuidDnF_EApOoMKx9U';
 
   static void setToken(String token) {
     debugPrint('[ApiService] Setting token (length: ${token.length})');
     _token = token;
   }
+
+  static void enableTestMode() {
+    debugPrint('[ApiService] Enabling test mode');
+    _isTestMode = true;
+    _token = _testToken;
+  }
+
+  static void disableTestMode() {
+    debugPrint('[ApiService] Disabling test mode');
+    _isTestMode = false;
+  }
+
+  static bool get isTestMode => _isTestMode;
 
   static String? get token => _token;
 
