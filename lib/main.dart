@@ -9,9 +9,14 @@ import 'services/auth_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'stores/main_store.dart';
+import 'widgets/toast_builder.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -35,6 +40,7 @@ class _RizzlyAppState extends State<RizzlyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rizzly',
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
@@ -42,6 +48,10 @@ class _RizzlyAppState extends State<RizzlyApp> {
         fontFamily: GoogleFonts.poppins().fontFamily,
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
+      builder: (context, child) {
+        ToastBuilder.globalInit(context);
+        return child ?? const SizedBox.shrink();
+      },
       home: SplashScreen(store: _mainStore),
     );
   }

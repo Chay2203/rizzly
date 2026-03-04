@@ -6,6 +6,7 @@ import '../services/auth_service.dart';
 import '../services/api_service.dart';
 import '../stores/main_store.dart';
 import '../widgets/floating_hearts.dart';
+import '../widgets/toast_builder.dart';
 import 'onboarding_screen.dart';
 import 'home_screen.dart';
 
@@ -76,13 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
           errorMessage = 'Network error. Please check your connection';
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red.shade400,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
-          ),
+        ToastBuilder.showToast(
+          errorMessage,
+          type: ToastType.error,
+          context: context,
+          bottomOffset: 250,
         );
       }
     } finally {
@@ -145,13 +144,11 @@ class _LoginScreenState extends State<LoginScreen> {
           errorMessage = 'Network error. Please check your connection';
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red.shade400,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
-          ),
+        ToastBuilder.showToast(
+          errorMessage,
+          type: ToastType.error,
+          context: context,
+          bottomOffset: 250,
         );
       }
     } finally {
@@ -237,11 +234,11 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // Show error for wrong email
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid test email'),
-            backgroundColor: Colors.red,
-          ),
+        ToastBuilder.showToast(
+          'Invalid test email',
+          type: ToastType.error,
+          context: context,
+          bottomOffset: 250,
         );
       }
     }

@@ -100,112 +100,112 @@ class _TestimonialsScreenState extends State<TestimonialsScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 16,
-                            ),
-                            decoration: ShapeDecoration(
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.36),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 16,
                               ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    '93%',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      color: Color(0xFF0170D2),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1,
-                                    ),
-                                  ),
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.36),
                                 ),
-                                const SizedBox(height: 12),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Opacity(
-                                    opacity: 0.50,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
                                     child: Text(
-                                      'CONFIDENCE BOOST',
+                                      '93%',
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 12.36,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.40,
-                                        letterSpacing: 0.37,
+                                        color: Color(0xFF0170D2),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 16,
-                            ),
-                            decoration: ShapeDecoration(
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.36),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    '4.2x',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      color: Color(0xFF0170D2),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Opacity(
-                                    opacity: 0.50,
-                                    child: Text(
-                                      'MORE 2ND DATES',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 12.36,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.40,
-                                        letterSpacing: 0.37,
+                                  const SizedBox(height: 12),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Opacity(
+                                      opacity: 0.50,
+                                      child: Text(
+                                        'CONFIDENCE BOOST',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12.36,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.40,
+                                          letterSpacing: 0.37,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 16,
+                              ),
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.36),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Text(
+                                      '4.2x',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Color(0xFF0170D2),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Opacity(
+                                      opacity: 0.50,
+                                      child: Text(
+                                        'MORE 2ND DATES',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12.36,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.40,
+                                          letterSpacing: 0.37,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -226,19 +226,19 @@ class _TestimonialsScreenState extends State<TestimonialsScreen> {
                 children: [
                   _buildTestimonialCard(
                     quote: '"Better than 10 years of therapy."',
-                    author: '- Harry P., Bangalore',
+                    author: '- Harry P, Bangalore',
                     width: screenWidth > 234 ? 234.0 : screenWidth - 64,
                   ),
                   const SizedBox(width: 8),
                   _buildTestimonialCard(
                     quote: '"Rizzly\'s insights are invaluable!"',
-                    author: '- Mark T., London',
+                    author: '- Mark T, London',
                     width: screenWidth > 234 ? 234.0 : screenWidth - 64,
                   ),
                   const SizedBox(width: 8),
                   _buildTestimonialCard(
                     quote: '"I used to freeze. Now I crave the tension."',
-                    author: '- Sarah L., New York',
+                    author: '- Sarah L, New York',
                     width: screenWidth > 234 ? 234.0 : screenWidth - 64,
                   ),
                 ],
@@ -316,7 +316,10 @@ class _TestimonialsScreenState extends State<TestimonialsScreen> {
       decoration: ShapeDecoration(
         color: const Color(0xFFFFF4E6),
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1.77, color: Colors.black.withValues(alpha: 0.05)),
+          side: BorderSide(
+            width: 1.77,
+            color: Colors.black.withValues(alpha: 0.05),
+          ),
           borderRadius: BorderRadius.circular(12.36),
         ),
       ),
