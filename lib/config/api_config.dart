@@ -1,5 +1,6 @@
 class ApiConfig {
-  static const String baseUrl = 'https://rizzly.up.railway.app';
+  static const String baseUrl =
+      'https://jeremiah-unexisting-semiproductively.ngrok-free.dev';
 
   // User Endpoints
   static const String createUser = '/api/user/create';
@@ -20,6 +21,10 @@ class ApiConfig {
   static const String getQuestion = '/api/conversations/get-question';
   static const String submitConversationAnswer =
       '/api/conversations/submit-answer';
+
+  // Rizz Assessment (voice-based)
+  static const String rizzAssessmentStart = '/api/user/rizz-assessment/start';
+  static const String rizzAssessmentAnswer = '/api/user/rizz-assessment/answer';
 
   // Google OAuth Configuration
   static const String googleWebClientId =

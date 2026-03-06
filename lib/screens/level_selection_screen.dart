@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../stores/main_store.dart';
-import 'testimonials_screen.dart';
+import 'rizz_quiz_screen.dart';
 
 class LevelSelectionScreen extends StatefulWidget {
   final MainStore store;
@@ -23,7 +23,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            TestimonialsScreen(userId: widget.userId, store: widget.store),
+            RizzQuizScreen(userId: widget.userId, store: widget.store),
       ),
     );
   }

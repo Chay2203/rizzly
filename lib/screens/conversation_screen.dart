@@ -502,8 +502,9 @@ class _ConversationScreenState extends State<ConversationScreen>
     final feedbackVerdict = _feedback?['feedback_verdict'] ?? '';
     final isGood = feedbackVerdict.toLowerCase() == 'good';
     final feedbackText = _feedback?['feedback_text'] ?? '';
+    final rizzScore = (_feedback?['rizz_score'] ?? 50) as int;
     final feedbackTitle = isGood ? '!! Brilliant Move !!' : 'Could Be Better';
-    final statusScore = isGood ? 0.9 : 0.3;
+    final statusScore = (rizzScore / 100).clamp(0.0, 1.0);
     final questionText = _currentQuestion?['message'] ?? '';
 
     return Column(
@@ -538,65 +539,74 @@ class _ConversationScreenState extends State<ConversationScreen>
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(25),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(
-                top: 41,
-                left: 20,
-                right: 20,
-                bottom: 20,
-              ),
-              decoration: ShapeDecoration(
-                color: isGood
-                    ? const Color(0xFF008972).withOpacity(0.05)
-                    : const Color(0xFF006FD1).withOpacity(0.05),
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    width: 2,
+            child: Column(
+              children: [
+                // Rizz Score
+                _buildSmallRizzScore(rizzScore),
+                const SizedBox(height: 16),
+                // Feedback Card
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(
+                    top: 41,
+                    left: 20,
+                    right: 20,
+                    bottom: 20,
+                  ),
+                  decoration: ShapeDecoration(
                     color: isGood
-                        ? const Color(0xFF008972).withOpacity(0.2)
-                        : const Color(0xFF006FD1).withOpacity(0.2),
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: isGood
-                    ? CrossAxisAlignment.center
-                    : CrossAxisAlignment.start,
-                children: [
-                  // Status Bar
-                  _buildStatusBar(statusScore, isGood),
-                  const SizedBox(height: 36),
-                  // Feedback Title
-                  Text(
-                    feedbackTitle,
-                    style: GoogleFonts.instrumentSerif(
-                      color: isGood
-                          ? const Color(0xFF008972)
-                          : const Color(0xFF006FD1),
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                      height: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Feedback Text
-                  if (feedbackText.isNotEmpty)
-                    Text(
-                      feedbackText,
-                      textAlign: isGood ? TextAlign.center : TextAlign.start,
-                      style: GoogleFonts.dmSans(
+                        ? const Color(0xFF008972).withValues(alpha: 0.05)
+                        : const Color(0xFF006FD1).withValues(alpha: 0.05),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 2,
                         color: isGood
-                            ? const Color(0xFF008972)
-                            : const Color(0xFF006FD1),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                        height: 1.60,
+                            ? const Color(0xFF008972).withValues(alpha: 0.2)
+                            : const Color(0xFF006FD1).withValues(alpha: 0.2),
                       ),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                ],
-              ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: isGood
+                        ? CrossAxisAlignment.center
+                        : CrossAxisAlignment.start,
+                    children: [
+                      // Status Bar
+                      _buildStatusBar(statusScore, isGood),
+                      const SizedBox(height: 36),
+                      // Feedback Title
+                      Text(
+                        feedbackTitle,
+                        style: GoogleFonts.instrumentSerif(
+                          color: isGood
+                              ? const Color(0xFF008972)
+                              : const Color(0xFF006FD1),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          height: 1,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Feedback Text
+                      if (feedbackText.isNotEmpty)
+                        Text(
+                          feedbackText,
+                          textAlign:
+                              isGood ? TextAlign.center : TextAlign.start,
+                          style: GoogleFonts.dmSans(
+                            color: isGood
+                                ? const Color(0xFF008972)
+                                : const Color(0xFF006FD1),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            height: 1.60,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -784,6 +794,67 @@ class _ConversationScreenState extends State<ConversationScreen>
                   fontWeight: FontWeight.w500,
                 ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSmallRizzScore(int score) {
+    String label;
+    Color color;
+    if (score >= 80) {
+      label = 'Fire 🔥';
+      color = const Color(0xFF008972);
+    } else if (score >= 60) {
+      label = 'Good';
+      color = const Color(0xFF006FD1);
+    } else if (score >= 40) {
+      label = 'Mid';
+      color = Colors.orange.shade700;
+    } else {
+      label = 'Cringe';
+      color = Colors.red.shade600;
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Rizz Score ~ ',
+                style: GoogleFonts.dmSans(
+                  color: color.withValues(alpha: 0.6),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                '$score',
+                style: GoogleFonts.instrumentSerif(
+                  color: color,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            label,
+            style: GoogleFonts.dmSans(
+              color: color,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

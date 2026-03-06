@@ -259,6 +259,91 @@ class ApiService {
     }
   }
 
+  // ==================== RIZZ ASSESSMENT (Voice-Based) ====================
+
+  /// Start a new voice-based rizz assessment session
+  static Future<Map<String, dynamic>> startRizzAssessment() async {
+    final url = '${ApiConfig.baseUrl}${ApiConfig.rizzAssessmentStart}';
+    debugPrint('[ApiService] Starting rizz assessment');
+    debugPrint('   URL: $url');
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: _authHeaders,
+    );
+
+    debugPrint('[ApiService] Response status: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      debugPrint('[ApiService] Rizz assessment started successfully');
+      return data;
+    } else if (response.statusCode == 401) {
+      debugPrint('[ApiService] Unauthorized (401)');
+      throw ApiException('Unauthorized', response.statusCode);
+    } else {
+      debugPrint(
+        '[ApiService] Failed to start assessment (${response.statusCode})',
+      );
+      throw ApiException('Failed to start assessment', response.statusCode);
+    }
+  }
+
+  /// Submit a voice answer for the rizz assessment
+  static Future<Map<String, dynamic>> submitRizzAssessmentAnswer({
+    required String sessionId,
+    required File audioFile,
+  }) async {
+    final url = '${ApiConfig.baseUrl}${ApiConfig.rizzAssessmentAnswer}';
+    debugPrint('[ApiService] Submitting rizz assessment answer');
+    debugPrint('   URL: $url');
+    debugPrint('   Session ID: $sessionId');
+    debugPrint('   Audio file: ${audioFile.path}');
+
+    final uri = Uri.parse(url);
+    final request = http.MultipartRequest('POST', uri);
+
+    request.headers['Authorization'] = 'Bearer $_token';
+    request.fields['session_id'] = sessionId;
+
+    final extension = audioFile.path.split('.').last.toLowerCase();
+    final mimeType = _getMimeType(extension);
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'audio',
+        audioFile.path,
+        contentType: MediaType.parse(mimeType),
+      ),
+    );
+
+    debugPrint('[ApiService] Sending multipart request...');
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    debugPrint('[ApiService] Response status: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      debugPrint('[ApiService] Rizz answer submitted successfully');
+      return data;
+    } else if (response.statusCode == 400) {
+      debugPrint('[ApiService] Bad request (400)');
+      throw ApiException('Missing session_id or audio', response.statusCode);
+    } else if (response.statusCode == 401) {
+      debugPrint('[ApiService] Unauthorized (401)');
+      throw ApiException('Unauthorized', response.statusCode);
+    } else if (response.statusCode == 404) {
+      debugPrint('[ApiService] Session not found (404)');
+      throw ApiException('No active session found', response.statusCode);
+    } else {
+      debugPrint(
+        '[ApiService] Failed to submit answer (${response.statusCode})',
+      );
+      throw ApiException('Failed to submit answer', response.statusCode);
+    }
+  }
+
   // ==================== SCENARIO APIs ====================
 
   /// Get all scenarios with conversations for current user
