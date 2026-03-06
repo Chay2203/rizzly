@@ -1,6 +1,5 @@
 class ApiConfig {
-  static const String baseUrl =
-      'https://jeremiah-unexisting-semiproductively.ngrok-free.dev';
+  static const String baseUrl = 'https://rizzly.up.railway.app';
 
   // User Endpoints
   static const String createUser = '/api/user/create';
